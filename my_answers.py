@@ -4,6 +4,7 @@ from keras.models import Sequential
 from keras.layers import Dense, Activation
 from keras.layers import LSTM
 import keras
+import string
 
 
 # TODO: fill out the function below that transforms the input series 
@@ -13,6 +14,7 @@ def window_transform_series(series, window_size):
     X = []
     y = []
 
+    # Loop the inputs and create a pair of an array with an output
     for i in range(len(series) - window_size):
         X.append(series[i:(i + window_size)])
         y.append(series[i + window_size])
@@ -37,9 +39,15 @@ def build_part1_RNN(window_size):
 
 ### TODO: return the text input with only ascii lowercase and the punctuation given below included.
 def cleaned_text(text):
-    punctuation = ['!', ',', '.', ':', ';', '?']
+    # Added single space to valid punctuation
+    punctuation = ['!', ',', '.', ':', ';', '?', ' ']
 
-    text = "".join(i for i in text if ord(i)<128  and i not in punctuation )
+
+    # Created a list of ascii
+    valid = string.ascii_lowercase
+
+    # Loop the text and join if valid or if it's in punctuation
+    text = "".join(i for i in text if i in valid or i in punctuation )
 
     return text
 
@@ -49,7 +57,7 @@ def window_transform_text(text, window_size, step_size):
     inputs = []
     outputs = []
 
-
+    # Loop the inputs and create a pair of an array with an output
     for i in range(0, len(text) - window_size, step_size):
         inputs.append(text[i:(i + window_size)])
         outputs.append(text[i + window_size])
